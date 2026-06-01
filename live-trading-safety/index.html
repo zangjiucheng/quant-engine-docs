@@ -1,0 +1,1572 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="C++ quant backtest + research engine and Bloomberg-style dashboard">
+      
+      
+      
+        <link rel="canonical" href="https://qe.jiucheng-zang.ca/live-trading-safety/">
+      
+      
+        <link rel="prev" href="../ibkr-tws-protocol/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Live trading safety - quant-engine</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.484c7ddc.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="amber">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#live-trading-safety-model-epic-42" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="quant-engine" class="md-header__button md-logo" aria-label="quant-engine" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            quant-engine
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Live trading safety
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="amber"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="amber"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../first-factor-tutorial/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Getting started
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../qe-language/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    
+    
+      <li class="md-tabs__item md-tabs__item--active">
+        <a href="../ibkr-connectivity/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Live trading
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="quant-engine" class="md-nav__button md-logo" aria-label="quant-engine" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    quant-engine
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting started
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Getting started
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../first-factor-tutorial/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    First factor (10 min)
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dashboard-walkthrough/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Dashboard walkthrough
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Reference
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Reference
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../qe-language/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    .qe language
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dsl-grammar/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DSL grammar
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../factor-research/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Factor research
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../walk-forward/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Walk-forward
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../multi-strategy/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Multi-strategy
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../forecasting/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Forecasting
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../options-model/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Options model
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+        
+        
+      
+      
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Live trading
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Live trading
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ibkr-connectivity/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IBKR connectivity
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ibkr-paper-verification/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IBKR paper verification
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../ibkr-tws-protocol/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    IBKR TWS protocol
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Live trading safety
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Live trading safety
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#threat-model-what-can-actually-go-wrong" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Threat model — what can actually go wrong
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#five-layers-of-defense" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Five layers of defense
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Five layers of defense">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#layer-0-config-opt-in" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 0 — config opt-in
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-1-startup-confirmation-modal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 1 — startup confirmation modal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-2-per-order-limits-safebroker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 2 — per-order limits (SafeBroker)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-3-kill-switch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 3 — kill-switch
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-4-reconcile-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 4 — reconcile loop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-5-gateway-health-ibkr-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 5 — gateway health (IBKR only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-delivery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase delivery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-we-deliberately-do-not-do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What we deliberately do NOT do
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#threat-model-what-can-actually-go-wrong" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Threat model — what can actually go wrong
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#five-layers-of-defense" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Five layers of defense
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Five layers of defense">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#layer-0-config-opt-in" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 0 — config opt-in
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-1-startup-confirmation-modal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 1 — startup confirmation modal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-2-per-order-limits-safebroker" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 2 — per-order limits (SafeBroker)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-3-kill-switch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 3 — kill-switch
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-4-reconcile-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 4 — reconcile loop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#layer-5-gateway-health-ibkr-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Layer 5 — gateway health (IBKR only)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#phase-delivery" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Phase delivery
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-we-deliberately-do-not-do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What we deliberately do NOT do
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#see-also" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        See also
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="live-trading-safety-model-epic-42">Live-trading safety model (EPIC-42)<a class="headerlink" href="#live-trading-safety-model-epic-42" title="Permanent link">&para;</a></h1>
+<p>What stops a bug or a wrong keystroke from blowing up your
+brokerage account when <code>qe_dashboard</code> starts submitting orders
+for real.</p>
+<p>This document is the <strong>threat model + design rationale</strong> behind
+the five-layer safety net. The implementation lives in
+<code>qe::broker::SafeBroker</code> (Phase A) + <code>qe::broker::IbkrBroker</code>
+(Phase B); both are tested against <code>AlpacaPaperBroker</code> as the
+zero-cost development target before any real TWS connects.</p>
+<p>Read this before flipping the env gate to live.</p>
+<h2 id="threat-model-what-can-actually-go-wrong">Threat model — what can actually go wrong<a class="headerlink" href="#threat-model-what-can-actually-go-wrong" title="Permanent link">&para;</a></h2>
+<p>There are six classes of failures we design against. Each is
+matched by one or more layers below.</p>
+<ol>
+<li>
+<p><strong>Mistaken-account incident.</strong> User intends to submit a paper
+   trade, broker mode silently flipped to live (config drift, UI
+   bug, env var leak across shells). Order lands on real account.
+   Worst case: full position size on the wrong account.</p>
+</li>
+<li>
+<p><strong>Mistaken-quantity incident.</strong> Strategy emits a buy intent
+   with wrong <code>size</code> (decimal-point typo, sweep override
+   overflow, signal-layer arithmetic edge case). One order with
+   100× the intended notional.</p>
+</li>
+<li>
+<p><strong>Runaway loop.</strong> Strategy or polling code submits orders in a
+   tight loop because of a state-machine bug (e.g. failed cancel
+   re-fires entry every bar). Rate-limit overrun, broker may
+   throttle or close the session.</p>
+</li>
+<li>
+<p><strong>Catastrophic strategy failure.</strong> Strategy works as designed
+   but the design itself loses money fast (regime change,
+   unhandled gap, missing stop). No bug — just bad logic — but we
+   need to stop bleeding once it's recognized.</p>
+</li>
+<li>
+<p><strong>State desync.</strong> Local view of positions / cash drifts away
+   from the broker's view (missed fill notification, partial fill
+   misaccounted, app crashed mid-order). Strategy makes decisions
+   from a fictitious book.</p>
+</li>
+<li>
+<p><strong>Broker / network failure.</strong> TWS crashes, socket disconnects,
+   broker rejects via session timeout. Need to stop trading
+   without crashing the dashboard or sending stale orders on
+   reconnect.</p>
+</li>
+</ol>
+<h2 id="five-layers-of-defense">Five layers of defense<a class="headerlink" href="#five-layers-of-defense" title="Permanent link">&para;</a></h2>
+<p>Each layer is independent. Bypassing one still leaves four. The
+order below is roughly "outermost (config-time) → innermost (per-
+order check)" — a bad order has to pass all of them to reach the
+broker.</p>
+<h3 id="layer-0-config-opt-in">Layer 0 — config opt-in<a class="headerlink" href="#layer-0-config-opt-in" title="Permanent link">&para;</a></h3>
+<p><strong>What it stops:</strong> mistaken-account (class 1).</p>
+<p>Live mode requires <strong>both</strong> of:
+- env var <code>QE_LIVE_TRADING=I_MEAN_IT</code> set in the shell that
+  launches <code>qe_dashboard</code>. Missing → live config is rejected at
+  load time, dashboard refuses to start. Cannot be set via
+  dashboard UI, cannot be persisted via config file. Has to be
+  re-affirmed every session.
+- Settings (Cmd+,) broker mode set to <code>ibkr-live</code> (default
+  <code>alpaca-paper</code>).</p>
+<p>Both must be true to reach Layer 1. Paper modes (alpaca-paper,
+ibkr-paper) skip the env-var requirement so iteration is fast.</p>
+<h3 id="layer-1-startup-confirmation-modal">Layer 1 — startup confirmation modal<a class="headerlink" href="#layer-1-startup-confirmation-modal" title="Permanent link">&para;</a></h3>
+<p><strong>What it stops:</strong> mistaken-account (class 1, after Layer 0
+opt-in was deliberate).</p>
+<p>Live mode boot blocks on a modal that:
+- Shows account number (e.g. <code>U1234567</code>) fetched from broker.
+- Shows current NetLiq (e.g. <code>CAD $42,310.50</code>).
+- Requires user to <strong>type the full account number into a text
+  field</strong> to dismiss. Approximate-match is not accepted (no auto-
+  complete, no first-N-chars).
+- Has no "remember me" button. Re-prompts every session.</p>
+<p>Modal cannot be background-dismissed (no click-outside, no Esc).
+Cancel button forces broker disconnect + return to PAPER mode.</p>
+<h3 id="layer-2-per-order-limits-safebroker">Layer 2 — per-order limits (<code>SafeBroker</code>)<a class="headerlink" href="#layer-2-per-order-limits-safebroker" title="Permanent link">&para;</a></h3>
+<p><strong>What it stops:</strong> mistaken-quantity (class 2), runaway loop
+(class 3).</p>
+<p><code>SafeBroker</code> wraps any concrete <code>IBroker</code> and rejects orders
+before they hit the wire when any of these are violated:</p>
+<table>
+<thead>
+<tr>
+<th>Limit</th>
+<th>Default</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>max_notional_per_order</code></td>
+<td><code>CAD $5_000</code> (live) / unbounded (paper)</td>
+<td>Settings (Cmd+,), config-persisted</td>
+</tr>
+<tr>
+<td><code>max_position_per_symbol</code></td>
+<td>200 shares (live)</td>
+<td>Settings (Cmd+,)</td>
+</tr>
+<tr>
+<td><code>max_orders_per_minute</code></td>
+<td>10 (live) / 60 (paper)</td>
+<td>hard-coded, Settings (Cmd+,) read-only</td>
+</tr>
+<tr>
+<td><code>max_daily_loss</code></td>
+<td>-CAD $500 (live)</td>
+<td>Settings (Cmd+,); triggers kill-switch</td>
+</tr>
+<tr>
+<td>Allowed symbols allow-list</td>
+<td>empty = all (paper) / explicit list (live recommended)</td>
+<td>Settings (Cmd+,)</td>
+</tr>
+</tbody>
+</table>
+<p>Rejections log to <code>orders.jsonl</code> with reason + intended order
+payload + timestamp. Strategy gets a clear error, doesn't crash.</p>
+<p>Limits are <strong>multiplicative with broker-side limits</strong>, not a
+replacement. IBKR has its own server-side checks (margin,
+short-locate, restricted symbols); SafeBroker stops the order
+before the wire so the request never reaches them. Belt + braces.</p>
+<h3 id="layer-3-kill-switch">Layer 3 — kill-switch<a class="headerlink" href="#layer-3-kill-switch" title="Permanent link">&para;</a></h3>
+<p><strong>What it stops:</strong> catastrophic strategy failure (class 4).</p>
+<p><code>Cmd+Shift+K</code> from any screen:
+1. Sets <code>cancel_all_open_orders</code> on the broker (best-effort —
+   logs any failures).
+2. Disables every running strategy (sets <code>running_ = false</code>; new
+   bars no longer trigger <code>on_bar</code>).
+3. Logs a <code>KillSwitch</code> event to <code>orders.jsonl</code> with timestamp.
+4. Shows a status modal: <code>Killed at HH:MM:SS · cancelled N
+   orders · CAD $X at risk in open positions.</code></p>
+<p><strong>Kill-switch does NOT auto-flat positions.</strong> Closing a position
+is a decision (could be lock-in of profit or realization of a
+big loss); it's a human call, not a panic-button default. The
+modal makes the open notional explicit so the user can choose.</p>
+<p>Kill-switch is always-on — works in paper modes too so the
+muscle memory is there before live trading.</p>
+<h3 id="layer-4-reconcile-loop">Layer 4 — reconcile loop<a class="headerlink" href="#layer-4-reconcile-loop" title="Permanent link">&para;</a></h3>
+<p><strong>What it stops:</strong> state desync (class 5).</p>
+<p>Every 30 seconds (and on every startup):
+1. <code>broker-&gt;get_positions()</code> → broker-side view.
+2. <code>PositionsCache-&gt;snapshot()</code> → local view.
+3. Per-symbol diff with tolerance (default: 1e-6 quantity).
+4. Any diff above tolerance → modal: <code>Position drift detected.
+   Adopt broker / adopt local / abort.</code> Three buttons; no
+   default; modal blocks the UI.</p>
+<p>We <strong>never auto-reconcile</strong>. This is brokerage state, not k8s
+spec — silent adoption is the wrong default. Human decides.</p>
+<p>The same loop pulls <code>accountSummary("DayTradesRemaining")</code> on
+IBKR and pops a warning when it hits 1 (so the user knows the
+next round-trip will use a PDT day; helpful even for IBC accounts
+since US securities can still trigger PDT-like restrictions).</p>
+<h3 id="layer-5-gateway-health-ibkr-only">Layer 5 — gateway health (IBKR only)<a class="headerlink" href="#layer-5-gateway-health-ibkr-only" title="Permanent link">&para;</a></h3>
+<p><strong>What it stops:</strong> broker / network failure (class 6).</p>
+<p>TWS socket disconnect:
+- Strategy auto-disables (same effect as kill-switch, minus the
+  cancel — we can't reach the broker to cancel anyway).
+- Top-bar badge flips to <code>BROKER OFFLINE</code> (red, blinking).
+- Polling backs off (don't hammer a dead socket).</p>
+<p>Reconnect (manual via Settings (Cmd+,) → Retry, never auto):
+- Strategy stays disabled until human re-enables.
+- Modal: <code>Reconnected. Reconcile? Y/N</code> — runs the Layer 4 loop
+  once before enabling order submission.</p>
+<p>We <strong>never auto-restart TWS</strong>. The TWS login flow has 2FA + a
+race-with-user dialog; restarting is the IBKR side's job.</p>
+<h2 id="phase-delivery">Phase delivery<a class="headerlink" href="#phase-delivery" title="Permanent link">&para;</a></h2>
+<p>The layers don't have to land together. Phase A (the first commit
+stack on this branch) ships layers 0 / 2 / 3 / 4 with Alpaca
+paper as the test target. Phase B adds layer 5 (IBKR-specific)
+when the TWS adapter lands. Phase C adds the UX (kill-switch
+chord, position-drift modal, badge). Layer 1's startup modal
+only fires in <code>ibkr-live</code> mode and lands in Phase B/C.</p>
+<p>That means the branch is shippable in stages:
+- After Phase A: hardened paper trading on Alpaca, with kill-
+  switch + safety layer + reconcile. Usable for dev work.
+- After Phase B: ibkr-paper works end to end with the same
+  safety layer.
+- After Phase D: ibkr-live works with full layer 1 + layer 5.</p>
+<h2 id="what-we-deliberately-do-not-do">What we deliberately do NOT do<a class="headerlink" href="#what-we-deliberately-do-not-do" title="Permanent link">&para;</a></h2>
+<p>These would be reasonable safety measures we choose not to
+implement, with the reasoning:</p>
+<table>
+<thead>
+<tr>
+<th>Skipped</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Auto-flat all positions on kill-switch</td>
+<td>Closing a position is a P&amp;L decision. Wrong default.</td>
+</tr>
+<tr>
+<td>Auto-reconcile drift</td>
+<td>Silent state correction is how money disappears unnoticed.</td>
+</tr>
+<tr>
+<td>Auto-restart TWS</td>
+<td>Races with the 2FA login prompt; out of our process scope.</td>
+</tr>
+<tr>
+<td>Auto-resume after disconnect</td>
+<td>A disconnect window is itself a state-uncertain period; reconnect should be an inspected event, not background.</td>
+</tr>
+<tr>
+<td>Per-symbol stop-loss enforced by broker</td>
+<td>Would need server-side STP orders pre-placed; v2 question. Layer 2's <code>max_daily_loss</code> is the v1 backstop.</td>
+</tr>
+<tr>
+<td><code>dry_run</code> mode that logs orders but doesn't submit</td>
+<td>Paper modes (alpaca-paper, ibkr-paper) already cover this. A "live but not really" mode is exactly the configuration that creates Layer 0's class-1 incidents.</td>
+</tr>
+<tr>
+<td>Two-person sign-off (multi-user approval)</td>
+<td>Single-user project. Different scope.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="see-also">See also<a class="headerlink" href="#see-also" title="Permanent link">&para;</a></h2>
+<ul>
+<li><a href="../ibkr-connectivity/"><code>docs/ibkr-connectivity.md</code></a> — how to
+  set up TWS or IB Gateway for the dashboard to talk to. Read
+  before flipping <code>broker = "ibkr-paper"</code>.</li>
+<li><code>EPICS/EPIC-42-live-broker-trading.md</code> (local-only planning
+  notes, gitignored) — task list and verification plan.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "..", "features": ["navigation.tabs", "navigation.sections", "navigation.top", "navigation.indexes", "content.code.copy", "content.code.annotate", "toc.follow", "search.suggest", "search.highlight"], "search": "../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
