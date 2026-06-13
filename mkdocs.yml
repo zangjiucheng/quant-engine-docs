@@ -1,0 +1,96 @@
+site_name: quant-engine
+site_description: C++ quant backtest + research engine and terminal-style dashboard
+site_url: "https://qe.jiucheng-zang.ca/"
+repo_url: ""
+docs_dir: docs
+site_dir: site
+
+theme:
+  name: material
+  features:
+    # Sidebar shows every section + page at all times so the Home page
+    # has a populated nav rail. Material's `navigation.tabs` was hiding
+    # the rail entirely on tab-pages with no children (Home was one).
+    - navigation.sections
+    - navigation.expand
+    - navigation.indexes
+    - navigation.top
+    - navigation.instant
+    - toc.follow
+    - content.code.copy
+    - content.code.annotate
+    - search.suggest
+    - search.highlight
+  palette:
+    - scheme: default
+      primary: black
+      accent: amber
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+    - scheme: slate
+      primary: black
+      accent: amber
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+
+markdown_extensions:
+  - admonition
+  - attr_list
+  - def_list
+  - tables
+  - toc:
+      permalink: true
+  - pymdownx.details
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+nav:
+  - Home: index.md
+  - Getting started:
+      - Install & setup wizard: install.md
+      - Architecture: architecture.md
+      - First factor (10 min): first-factor-tutorial.md
+      - Dashboard walkthrough: dashboard-walkthrough.md
+  - Configuration:
+      - .qe language: qe-language.md
+      - Signal DSL grammar: dsl-grammar.md
+  - Backtesting:
+      - Walk-forward validation: walk-forward.md
+      - Multi-strategy portfolios: multi-strategy.md
+      - Forecasting: forecasting.md
+      - results.json schema: results-json.md
+  - Analytics:
+      - Factor research: factor-research.md
+      - Options pricing: options-model.md
+  - Live trading:
+      - Safety model: live-trading-safety.md
+      - Daemon runbook: live-trading-runbook.md
+      - Eval self-healing: eval-self-heal.md
+      - Staged entry / exit: staged-entry.md
+      - Daemon smoke checklist: qe-daemon-smoke.md
+  - Brokers & credentials:
+      - Broker credentials: broker-credentials.md
+      - Credentials security: credentials-security.md
+      - Code signing (macOS): code-signing.md
+  - Interactive Brokers:
+      - IBKR connectivity: ibkr-connectivity.md
+      - Paper-trading verification: ibkr-paper-verification.md
+      - TWS wire protocol: ibkr-tws-protocol.md
