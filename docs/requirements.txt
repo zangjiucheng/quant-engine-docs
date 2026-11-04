@@ -1,0 +1,12 @@
+# The PUBLIC builder's toolchain (scripts/docs-publish/gh-pages.yml
+# installs this file). It must agree with requirements-docs.txt, which
+# is what `scripts/publish-docs.sh` smoke-builds against locally —
+# otherwise the gate passes here and the site breaks there.
+#
+# These floated on `>=` while the local gate was exact, so a MkDocs
+# release could break the published site with nothing locally to
+# notice. mkdocs-material already warns that MkDocs 2.0 stops every
+# plugin and theme override working, with no migration path.
+mkdocs==1.6.1
+mkdocs-material==9.7.7
+pymdown-extensions==11.0.1
